@@ -20,23 +20,36 @@ const char* tokenTypeToString(TokenType type) {
     }
 }
 
-TokenType charCheck(const char *token) {
-    if (strcmp(token, "(") == 0) {
+TokenType charCheck(char token) {
+    printf("%d",token);
+    if (token == '(') {
         return TOKEN_LPAREN;
-    }else if (strcmp(token, "while" ) == 0 || strcmp(token, "for" ) == 0 
-    || strcmp(token, "if" ) == 0 || strcmp(token, "else" ) == 0 
-    || strcmp(token, "function" ) == 0) {
+    } else if (token == ')') {
         return TOKEN_RPAREN;
-    }else if (strcmp(token, ")") == 0) {
-        return TOKEN_RPAREN;
-    } else if (isalpha(token[0])) {
+    } else if (token == '{') {
+        return TOKEN_LBRACE;
+    } else if (token == '}') {
+        return TOKEN_RBRACE;
+    } else if (token == '[') {
+        return TOKEN_LBRACKET;
+    } else if (token == ']') {
+        return TOKEN_RBRACKET;
+    } else if (token == ';') {
+        return TOKEN_SEMICOLON;
+    } else if (token == ',') {
+        return TOKEN_COMMA;
+    } else if (isalpha(token)) {
         return TOKEN_IDENTIFIER;
-    } else if (isdigit(token[0])) {
+    } else if (isdigit(token)) {
         return TOKEN_NUMBER;
+    } else if (isspace(token)) {
+        printf("Whitespace\n");
+        return TOKEN_WHITESPACE;
     } else {
         return TOKEN_UNKNOWN;
     }
 }
+
 
 void openFile(char *filename, token tokens[]) {
     
@@ -67,26 +80,15 @@ void openFile(char *filename, token tokens[]) {
 
     buffer[length] = '\0';  // Null-terminate the buffer
     fclose(f);
-
     // Tokenize the buffer
-    char *tokenSection = strtok(buffer, " \n\t");
     int i=0;
-    while (tokenSection != NULL) {
-        printf("%s\n", tokenSection);
-        tokenSection = strtok(NULL, " \n\t");
-        TokenType tokenType = charCheck(tokenSection);
-        //prebaciti tokentype u string jebem ti sunce stvara mi ogromne probleme
-        tokens[i].tokenType = charCheck(tokenSection);
-        i++;
-    }
-
-    for (int j = 0; j < i; j++)
+    for (int s = 0; s < length; s++)
     {
-        printf("%s /n", tokens[i].value);
+        TokenType tokenType = charCheck(buffer[i]);
+        //prebaciti tokentype u string jebem ti sunce stvara mi ogromne probleme
+        tokens[i].tokenType = charCheck(buffer[i]);
+        printf("%s\n", tokenTypeToString(tokens[i].tokenType));
     }
-    
-    
-
     free(buffer);
 }
 
